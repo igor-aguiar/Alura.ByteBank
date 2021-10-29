@@ -75,7 +75,7 @@ namespace Alura.ByteBank.Apresentacao
             {
                 foreach (var item in contas)
                 {
-                    Console.WriteLine("\n"+item.ToString());
+                   Console.WriteLine("\n"+item.ToString());
                 }
             }
             else
