@@ -1,5 +1,7 @@
 ﻿using Alura.ByteBank.Dados.Repositorio;
 using Alura.ByteBank.Dominio.Entidades;
+using Alura.ByteBank.Dominio.Interfaces.Repositorios;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -12,13 +14,23 @@ namespace Alura.ByteBank.Infraestrutura.Testes
 {
     public class AgenciaRepositorioTestes
     {
-        private AgenciaRepositorio _repositorio;
+        private readonly IAgenciaRepositorio _repositorio;
+
+        public AgenciaRepositorioTestes()
+        {
+            //Injetando dependências no construtor;
+            var servico = new ServiceCollection();
+            servico.AddTransient<IAgenciaRepositorio, AgenciaRepositorio>();
+
+            var provedor = servico.BuildServiceProvider();
+            _repositorio = provedor.GetService<IAgenciaRepositorio>();
+
+        }
 
         [Fact]
         public void TestaObterTodasAgencias()
         {
-            //Arrange
-            _repositorio = new AgenciaRepositorio();
+            //Arrange        
 
             //Act
             List<Agencia> lista = _repositorio.ObterTodos();
@@ -31,7 +43,6 @@ namespace Alura.ByteBank.Infraestrutura.Testes
         public void TestaObterAgenciaPorId()
         {
             //Arrange
-            _repositorio = new AgenciaRepositorio();
 
             //Act
             var agencia = _repositorio.ObterPorId(1);
@@ -44,11 +55,9 @@ namespace Alura.ByteBank.Infraestrutura.Testes
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
-        [InlineData(3)]
         public void TestaObterAgenciasPorVariosId(int id)
         {
-            //Arrange
-            _repositorio = new AgenciaRepositorio();
+            //Arrange            
 
             //Act
             var agencia = _repositorio.ObterPorId(id);
@@ -59,10 +68,32 @@ namespace Alura.ByteBank.Infraestrutura.Testes
         }
 
         [Fact]
+        public void TesteInsereUmaNovaAgenciaNaBaseDeDados()
+        {
+            //Arrange            
+            string nome = "Agencia Guarapari";
+            int numero = 125982;
+            Guid identificador = Guid.NewGuid();
+            string endereco = "Rua: 7 de Setembro - Centro";
+
+            var agencia = new Agencia()
+            {
+                Nome = nome,
+                Identificador = identificador,
+                Endereco = endereco,
+                Numero = numero
+            };
+
+            //Act
+            var retorno = _repositorio.Adicionar(agencia);
+
+            //Assert
+            Assert.True(retorno);
+        }
+        [Fact]
         public void TestaAtualizacaoInformacaoDeterminadaAgencia()
         {
-            //Arrange
-            _repositorio = new AgenciaRepositorio();
+            //Arrange      
             var agencia = _repositorio.ObterPorId(2);
             var nomeNovo = "Agencia Nova";
             agencia.Nome = nomeNovo;
@@ -74,42 +105,31 @@ namespace Alura.ByteBank.Infraestrutura.Testes
             Assert.True(atualizado);
         }
 
-
-        // Testes com Mock
         [Fact]
-        public void TestaObterAgenciasMock()
+        public void TestaRemoverInformacaoDeterminadaAgencia()
         {
-            //Arange
-            var bytebankRepositorioMock = new Mock<IByteBankRepositorio>();
-            var mock = bytebankRepositorioMock.Object;
-
+            //Arrange
             //Act
-            var lista = mock.BuscarAgencias();
+            var atualizado = _repositorio.Excluir(3);
 
             //Assert
-            bytebankRepositorioMock.Verify(b => b.BuscarAgencias());
+            Assert.True(atualizado);
         }
 
+
+        //Exceções
         [Fact]
-        public void TestaAdiconarAgenciaMock()
+        public void TestaExcecaoConsultaPorAgenciaPorId()
         {
-            // Arrange
-            var agencia = new Agencia()
-            {
-                Nome = "Agência Amaral",
-                Identificador = Guid.NewGuid(),
-                Id = 4,
-                Endereco = "Rua Arthur Costa",
-                Numero = 6497
-            };
 
-            var repositorioMock = new ByteBankRepositorio();
-
-            //Act
-            var adicionado = repositorioMock.AdicionarAgencia(agencia);
-
+            //Act     
             //Assert
-            Assert.True(adicionado);
+            Assert.Throws<FormatException>(
+                () => _repositorio.ObterPorId(33)
+             );
+
         }
+
+
     }
 }
