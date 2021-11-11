@@ -13,8 +13,8 @@ namespace Alura.ByteBank.Dados.Migrations
             migrationBuilder.Sql("INSERT INTO `cliente` VALUES (null,'510.711.260-91','João Pedro','Developer','20cd1c01-5fbf-40b7-b41b-0341bd38fc32')");
             migrationBuilder.Sql("INSERT INTO `cliente` VALUES (null,'224.182.250-70','José Neves','Atleta De Poker','20cd1c01-5fbf-40b7-b41b-0341bd38fc32')");
 
-            migrationBuilder.Sql("INSERT INTO `conta_corrente` VALUES(null,4159, 1, 1, 300, '1001b6f8-4fdb-44dd-a63d-850e6bf5e1d3', '00000000-0000-0000-0000-000000000000');");
-            migrationBuilder.Sql("INSERT INTO `conta_corrente` VALUES(null,1789, 2, 2, 400, 'fd3a2250-27d9-48f4-ae89-9eea10a93396', '00000000-0000-0000-0000-000000000000');");
+            migrationBuilder.Sql("INSERT INTO `conta_corrente` VALUES(null,4159, 1, 1, 300, '1001b6f8-4fdb-44dd-a63d-850e6bf5e1d3', '00000000-0000-0000-0000-000000000000')");
+            migrationBuilder.Sql("INSERT INTO `conta_corrente` VALUES(null,1789, 2, 2, 400, 'fd3a2250-27d9-48f4-ae89-9eea10a93396', '00000000-0000-0000-0000-000000000000')");
 
 
         }
@@ -24,7 +24,7 @@ namespace Alura.ByteBank.Dados.Migrations
             migrationBuilder.Sql("Delete FROM `cliente` where id<>null ");
             migrationBuilder.Sql("Delete FROM `agencia` where id<>null ");
             migrationBuilder.Sql("Delete FROM `conta_corrente` where id<>null ");
-            //migrationBuilder.Sql("ALTER TABLE tabela AUTO_INCREMENT = 1; ");
+            
         }
     }
 }
